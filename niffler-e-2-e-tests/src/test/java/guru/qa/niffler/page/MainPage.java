@@ -1,12 +1,12 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.SelenideElement;
-
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class MainPage {
+import com.codeborne.selenide.SelenideElement;
+
+public class MainPage extends BasePage {
   private final SelenideElement spendingTable = $("#spendings");
 
   public MainPage checkThatPageLoaded() {
