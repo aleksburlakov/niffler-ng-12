@@ -3,6 +3,7 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UserdataUserEntityRowMapper;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -67,6 +68,15 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
             UserdataUserEntityRowMapper.instance,
             username
         )
+    );
+  }
+
+  @Override
+  public List<UserEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.query(
+        "SELECT * FROM \"user\"",
+        UserdataUserEntityRowMapper.instance
     );
   }
 
