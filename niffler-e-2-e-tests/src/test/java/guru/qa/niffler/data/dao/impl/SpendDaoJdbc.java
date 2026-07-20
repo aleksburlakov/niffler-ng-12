@@ -19,8 +19,6 @@ import java.util.UUID;
 
 public class SpendDaoJdbc implements SpendDao {
 
-  private static final Config CFG = Config.getInstance();
-
   private final Connection connection;
 
   public SpendDaoJdbc(Connection connection) {
@@ -96,6 +94,25 @@ public class SpendDaoJdbc implements SpendDao {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public List<SpendEntity> findAll() {
+    List<SpendEntity> spends = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT s.*, c.name as category_name, c.username as category_username, c.archived as category_archived " +
+            "FROM spend s JOIN category c ON s.category_id = c.id"
+    )) {
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          SpendEntity entity = mapRow(rs);
+          spends.add(entity);
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return spends;
   }
 
   @Override
