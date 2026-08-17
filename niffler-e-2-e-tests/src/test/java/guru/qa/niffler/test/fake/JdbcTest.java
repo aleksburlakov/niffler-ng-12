@@ -85,5 +85,6 @@ public class JdbcTest {
 
     usersDbClient.addIncomeInvitation(user, 1);
     usersDbClient.addOutcomeInvitation(user, 1);
+    usersDbClient.addFriend(user, 1);
   }
 }
