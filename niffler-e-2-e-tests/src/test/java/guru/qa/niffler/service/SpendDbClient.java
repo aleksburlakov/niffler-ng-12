@@ -88,7 +88,10 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   public void deleteSpend(SpendJson spend) {
-    spendRepository.remove(SpendEntity.fromJson(spend));
+    xaTransactionTemplate.execute(() -> {
+      spendRepository.remove(SpendEntity.fromJson(spend));
+      return null;
+    });
   }
 
   @Override
