@@ -44,6 +44,31 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
+  public UserEntity update(UserEntity user) {
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+        "UPDATE \"user\" SET username = ?, firstname = ?, surname = ?, full_name = ?, " +
+            "currency = ?, photo = ?, photo_small = ? WHERE id = ?"
+    )) {
+      ps.setString(1, user.getUsername());
+      ps.setString(2, user.getFirstname());
+      ps.setString(3, user.getSurname());
+      ps.setString(4, user.getFullname());
+      ps.setString(5, user.getCurrency().name());
+      ps.setBytes(6, user.getPhoto());
+      ps.setBytes(7, user.getPhotoSmall());
+      ps.setObject(8, user.getId());
+
+      int updatedRows = ps.executeUpdate();
+      if (updatedRows == 0) {
+        throw new SQLException("User with id = " + user.getId() + " was not found");
+      }
+      return user;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(URL).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ? ")) {
       ps.setObject(1, id);
@@ -79,11 +104,11 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
 
   @Override
   public void delete(UserEntity user) {
-    try (PreparedStatement ps = holder(URL).connection().prepareStatement(
+    try (PreparedStatement deleteUserPs = holder(URL).connection().prepareStatement(
         "DELETE FROM \"user\" WHERE id = ?"
     )) {
-      ps.setObject(1, user.getId());
-      ps.executeUpdate();
+      deleteUserPs.setObject(1, user.getId());
+      deleteUserPs.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

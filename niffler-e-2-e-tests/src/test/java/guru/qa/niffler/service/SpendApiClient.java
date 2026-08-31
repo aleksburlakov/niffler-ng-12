@@ -12,6 +12,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,6 +42,11 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
+  public SpendJson updateSpend(SpendJson spend) {
+    return null;
+  }
+
+  @Override
   public CategoryJson createCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
@@ -63,6 +70,36 @@ public class SpendApiClient implements SpendClient {
     }
     assertEquals(200, response.code());
     return response.body();
+  }
+
+  @Override
+  public Optional<CategoryJson> findCategoryById(UUID id) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<SpendJson> findSpendById(UUID id) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<SpendJson> findSpendByUsernameAndDescription(String username, String description) {
+    return Optional.empty();
+  }
+
+  @Override
+  public void deleteSpend(SpendJson spend) {
+
+  }
+
+  @Override
+  public void deleteCategory(CategoryJson category) {
+
   }
 
   public SpendJson editSpend(SpendJson spend) {

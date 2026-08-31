@@ -41,4 +41,8 @@ public record UserJson(
         friendshipStatus
     );
   }
+
+  public static UserJson fromEntity(UserEntity entity) {
+    return fromEntity(entity, null);
+  }
 }

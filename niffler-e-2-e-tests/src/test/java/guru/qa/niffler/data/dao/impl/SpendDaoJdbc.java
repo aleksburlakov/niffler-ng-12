@@ -6,7 +6,6 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -95,18 +94,6 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public void deleteSpend(SpendEntity spend) {
-    try (PreparedStatement ps = holder(URL).connection().prepareStatement(
-        "DELETE FROM spend WHERE id = ?"
-    )) {
-      ps.setObject(1, spend.getId());
-      ps.executeUpdate();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
   public List<SpendEntity> findAll() {
     try (PreparedStatement ps = holder(URL).connection().prepareStatement(
         "SELECT * FROM spend")) {
@@ -128,6 +115,60 @@ public class SpendDaoJdbc implements SpendDao {
         }
       }
       return result;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public SpendEntity update(SpendEntity spend) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+        "UPDATE spend SET username = ?, spend_date = ?, currency = ?, amount = ?, description = ?, category_id = ? WHERE id = ?"
+    )) {
+      ps.setString(1, spend.getUsername());
+      ps.setDate(2, new java.sql.Date(spend.getSpendDate().getTime()));
+      ps.setString(3, spend.getCurrency().name());
+      ps.setDouble(4, spend.getAmount());
+      ps.setString(5, spend.getDescription());
+      ps.setObject(6, spend.getCategory().getId());
+      ps.setObject(7, spend.getId());
+
+      int updatedRows = ps.executeUpdate();
+      if (updatedRows == 0) {
+        throw new SQLException("Spend with id = " + spend.getId() + " was not found");
+      }
+      return spend;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+        "SELECT * FROM spend WHERE username = ? AND description = ?"
+    )) {
+      ps.setString(1, username);
+      ps.setString(2, description);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return Optional.of(mapRow(rs));
+        } else {
+          return Optional.empty();
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void remove(SpendEntity spend) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+        "DELETE FROM spend WHERE id = ?"
+    )) {
+      ps.setObject(1, spend.getId());
+      ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

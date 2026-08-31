@@ -1,5 +1,7 @@
 package guru.qa.niffler.data.entity.auth;
 
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.model.UserJson;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +15,7 @@ import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
