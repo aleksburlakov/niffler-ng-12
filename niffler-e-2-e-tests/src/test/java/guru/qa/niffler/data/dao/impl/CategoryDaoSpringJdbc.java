@@ -111,4 +111,13 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         CategoryEntityRowMapper.instance
     );
   }
+
+  @Override
+  public void remove(CategoryEntity category) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+    jdbcTemplate.update(
+        "DELETE FROM category WHERE id = ?",
+        category.getId()
+    );
+  }
 }

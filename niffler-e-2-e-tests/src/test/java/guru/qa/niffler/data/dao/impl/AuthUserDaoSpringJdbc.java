@@ -69,4 +69,48 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         AuthUserEntityRowMapper.instance
     );
   }
+
+  public AuthUserEntity update(AuthUserEntity user) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
+    int updatedRows = jdbcTemplate.update(
+        "UPDATE \"user\" SET username = ?, account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ?, " +
+            "enabled = ?, password = ? WHERE id = ?",
+        user.getUsername(),
+        user.getAccountNonExpired(),
+        user.getAccountNonLocked(),
+        user.getCredentialsNonExpired(),
+        user.getEnabled(),
+        user.getPassword(),
+        user.getId()
+    );
+
+    if (updatedRows == 0) {
+      throw new RuntimeException("User with id = " + user.getId() + " was not found");
+    }
+
+    return user;
+  }
+
+  public Optional<AuthUserEntity> findByUsername(String username) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              "SELECT * FROM \"user\" WHERE username = ?",
+              AuthUserEntityRowMapper.instance,
+              username
+          )
+      );
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
+  }
+
+  public void remove(AuthUserEntity user) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
+    jdbcTemplate.update(
+        "DELETE FROM \"user\" WHERE id = ?",
+        user.getId()
+    );
+  }
 }

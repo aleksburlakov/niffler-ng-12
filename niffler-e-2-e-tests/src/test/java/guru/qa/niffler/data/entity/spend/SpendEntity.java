@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
+import static jakarta.persistence.CascadeType.MERGE;
 import static jakarta.persistence.CascadeType.PERSIST;
 
 @Getter
@@ -50,7 +51,7 @@ public class SpendEntity implements Serializable {
   @Column(nullable = false)
   private String description;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = PERSIST)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = MERGE)
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private CategoryEntity category;
 
