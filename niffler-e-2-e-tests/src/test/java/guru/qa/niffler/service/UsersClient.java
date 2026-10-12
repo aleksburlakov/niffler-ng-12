@@ -28,4 +28,6 @@ public interface UsersClient {
 
   @Nonnull
   List<UserJson> addFriend(UserJson targetUser, int count);
+
+  List<UserJson> findAll(String username, String searchedQuery);
 }
