@@ -144,6 +144,11 @@ public class UsersDbClient implements UsersClient {
     return result;
   }
 
+  @Override
+  public List<UserJson> findAll(String username, String searchedQuery) {
+    return List.of();
+  }
+
   private UserEntity userEntity(String username) {
     UserEntity ue = new UserEntity();
     ue.setUsername(username);

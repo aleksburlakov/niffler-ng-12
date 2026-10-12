@@ -14,7 +14,7 @@ public interface UsersClient {
   static UsersClient getInstance() {
     return "api".equals(System.getProperty("client.impl"))
         ? new UsersApiClient()
-        : new UsersDbClient();
+        : new UsersApiClient();
   }
 
   @Nonnull
@@ -28,4 +28,6 @@ public interface UsersClient {
 
   @Nonnull
   List<UserJson> addFriend(UserJson targetUser, int count);
+
+  List<UserJson> findAll(String username, String searchedQuery);
 }

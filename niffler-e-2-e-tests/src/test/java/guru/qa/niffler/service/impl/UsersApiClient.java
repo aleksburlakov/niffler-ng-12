@@ -141,4 +141,18 @@ public class UsersApiClient implements UsersClient {
     }
     return result;
   }
+
+  @Nonnull
+  @Override
+  @Step("Find all users using API")
+  public List<UserJson> findAll(String username, String searchedQuery) {
+    Response<List<UserJson>> response;
+    try {
+      response = userdataApi.allUsers(username, searchedQuery).execute();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    assertEquals(200, response.code());
+    return response.body();
+  }
 }
